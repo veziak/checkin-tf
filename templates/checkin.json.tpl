@@ -3,9 +3,6 @@
     "name": "checkin-frontend",
     "image": "${frontend_image_url}",
     "essential": true,
-    "cpu": 10,
-    "memory": 256,
-    "links": ["checkin-backend"],
     "portMappings": [
       {
         "containerPort": 8080,
@@ -16,7 +13,7 @@
     "environment": [
       {
         "name": "BACKEND_URL",
-        "value": "http://checkin-backend:5000"
+        "value": "http://localhost:5000"
       }
     ],
     "logConfiguration": {
@@ -32,8 +29,6 @@
     "name": "checkin-backend",
     "image": "${backend_image_url}",
     "essential": true,
-    "cpu": 10,
-    "memory": 256,
     "portMappings": [
       {
         "containerPort": 5000,

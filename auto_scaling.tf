@@ -1,21 +1,39 @@
-resource "aws_launch_configuration" "ecs_launch_config" {
-  name                        = "${var.ecs_cluster_name}-launch-config"
-  image_id                    = data.aws_ssm_parameter.recommended_linux_ami.value
-  instance_type               = var.instance_type
-  security_groups             = [aws_security_group.ecs_secuirity_group.id]
-  iam_instance_profile        = aws_iam_instance_profile.ecs_instance_profile.name
-  key_name                    = aws_key_pair.ec2_ssh_key_pair.key_name
-  associate_public_ip_address = false
-  user_data                   = "#!/bin/bash\necho ECS_CLUSTER=${var.ecs_cluster_name} > /etc/ecs/ecs.config"
+resource "aws_appautoscaling_target" "autoscaling_target" {
+  max_capacity       = var.autoscaling_max_capacity
+  min_capacity       = var.autoscaling_min_capacity
+  resource_id        = "service/${aws_ecs_cluster.ecs_cluster.name}/${aws_ecs_service.ecs_service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
 }
 
-resource "aws_autoscaling_group" "ecs_asg" {
-  name                      = "ecs_asg"
-  vpc_zone_identifier       = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
-  launch_configuration      = aws_launch_configuration.ecs_launch_config.name
-  desired_capacity          = var.autoscale_desired
-  min_size                  = var.autoscale_min
-  max_size                  = var.autoscale_max
-  health_check_grace_period = 300
-  health_check_type         = "EC2"
+resource "aws_appautoscaling_policy" "memory_autoscaling_policy" {
+  name               = "memory_autoscaling_policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.autoscaling_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.autoscaling_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.autoscaling_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageMemoryUtilization"
+    }
+
+    target_value = 80
+  }
+}
+
+resource "aws_appautoscaling_policy" "cpu_autoscaling_policy" {
+  name               = "cpu_autoscaling_policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.autoscaling_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.autoscaling_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.autoscaling_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value = 60
+  }
 }

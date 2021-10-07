@@ -47,6 +47,22 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
+variable "ecs_cpu" {
+  default = 512
+}
+
+variable "ecs_memory" {
+  default = 1024
+}
+
+variable "autoscaling_max_capacity" {
+  default = 4
+}
+
+variable "autoscaling_min_capacity" {
+  default = 1
+}
+
 variable "frontend_image_url" {
   description = "Docker image to run frontend app in the ECS cluster"
 }
@@ -96,15 +112,4 @@ variable "domain_name" {
 
 variable "route53_zone" {
   description = "Route53 zone name"
-}
-
-# bastion
-
-variable "create_bastion" {
-  description = "Whether to create bastion host or not"
-  default = false
-}
-
-variable "bastion_allowed_cidr" {
-  description = "CIDR allowed to connect to bastion host"
 }

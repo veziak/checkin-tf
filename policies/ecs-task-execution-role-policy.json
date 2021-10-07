@@ -10,7 +10,6 @@
         "ecr:BatchGetImage",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
-        "ssm:GetParameters",
         "secretsmanager:GetSecretValue"
       ],
       "Resource": "*"

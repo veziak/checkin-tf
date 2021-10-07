@@ -1,4 +1,4 @@
-# Production VPC
+# VPC
 resource "aws_vpc" "vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -87,24 +87,3 @@ resource "aws_route" "public_internet_gateway_route" {
   gateway_id             = aws_internet_gateway.internet_gateway.id
   destination_cidr_block = "0.0.0.0/0"
 }
-
-#######################
-# VPC Endpoint
-#######################
-/*
-data "aws_vpc_endpoint_service" "dynamodb" {
-  service = "dynamodb"
-}
-
-resource aws_vpc_endpoint dynamodb_endpoint {
-  service_name        = join(".", ["com.amazonaws", var.region, "dynamodb"])
-  vpc_endpoint_type   = "Gateway"
-  vpc_id              = aws_vpc.vpc.id
-}
-
-## VPC Endpoint Route Table association
-resource aws_vpc_endpoint_route_table_association dynamodb_vpc_endpoint_rta {
-  route_table_id  = aws_route_table.private_route_table.id
-  vpc_endpoint_id = aws_vpc_endpoint.dynamodb_endpoint.id
-}
-*/

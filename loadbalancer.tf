@@ -13,6 +13,7 @@ resource "aws_lb_target_group" "default_target_group" {
   port        = 8080
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc.id
+  target_type = "ip"
 
   health_check {
     path                = var.health_check_path
