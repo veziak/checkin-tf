@@ -1,7 +1,7 @@
 # core
 variable "region" {
   description = "The AWS region to create resources in."
-  default     = "us-west-1"
+  default     = "eu-west-2"
 }
 
 variable "aws_account_id" {
