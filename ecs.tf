@@ -27,9 +27,8 @@ resource "aws_ecs_service" "ecs_service" {
   name            = "${var.ecs_cluster_name}-service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.checkin_app_task_definition.arn
-  desired_count = var.app_count
-  launch_type   = "FARGATE"
-  depends_on    = [aws_alb_listener.ecs_alb_http_listener]
+  launch_type     = "FARGATE"
+  depends_on      = [aws_alb_listener.ecs_alb_http_listener]
 
   network_configuration {
     subnets         = [aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id]
