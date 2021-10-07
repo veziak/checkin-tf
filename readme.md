@@ -40,11 +40,25 @@ docker tag checkin-frontend:latest $AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.c
 docker push $AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com/checkin-frontend:latest
 ```
 
-3. Run terraform
+3. create terraform.tfvars file and set all required values
+
+```
+aws_account_id       = <AWS Account Id>
+ecs_cluster_name     = "checkin-cluster"
+region               = "<aws region>"
+availability_zones   = ["<aws region>-2a", "<aws region>-2b"]
+backend_image_url    = "<AWS Account Id>.dkr.ecr.<aws region>.amazonaws.com/checkin-backend:latest"
+frontend_image_url   = "<AWS Account Id>.dkr.ecr.<aws region>.amazonaws.com/checkin-frontend:latest"
+domain_name          = "test.example.com"
+route53_zone         = "example.com"
+```
+
+
+4. Run terraform
 ```
 terraform init
 terraform apply
 ```
 
-4. Check that website is up and running.
+5. Check that test.example.com website is up and running.
 
